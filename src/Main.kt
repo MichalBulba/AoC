@@ -14,7 +14,7 @@ object Main {
 //        twoTwo.Eleven.resolve()
 //        twoTwo.ElevenTwo.resolve()
 
-        println("AdventOfCode2023!")
+//        println("AdventOfCode2023!")
 //        twoThree.One.resolve()
 //        twoThree.Two.resolve()
 //        twoThree.Three.resolve()
@@ -32,6 +32,8 @@ object Main {
 //        twoThree.Eighteen.resolve()
 
         println("AdventOfCode2024!")
-        twoFour.One.resolve()
+//        twoFour.One.resolve()
+//        twoFour.Two.resolve()
+        twoFour.Three.resolve()
     }
 }
