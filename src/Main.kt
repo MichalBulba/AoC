@@ -34,6 +34,7 @@ object Main {
         println("AdventOfCode2024!")
 //        twoFour.One.resolve()
 //        twoFour.Two.resolve()
-        twoFour.Three.resolve()
+//        twoFour.Three.resolve()
+        twoFour.Four.resolve()
     }
 }
