@@ -1,8 +1,12 @@
 package twoFour
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.lang.Exception
 import java.time.Instant
+import java.util.concurrent.atomic.AtomicInteger
 
 object Six {
 
@@ -18,6 +22,7 @@ object Six {
     fun resolve() {
         resolve1()
         resolve2()
+        resolve2b()
     }
 
     private fun resolve1() {
@@ -25,7 +30,7 @@ object Six {
         File("24/input_six.txt").forEachLine { line ->
             map += line
             val x = line.indexOf('^')
-            if(x > 0) {
+            if (x > 0) {
                 start = Point(x, map.size)
             }
         }
@@ -35,7 +40,7 @@ object Six {
             println("Going $direction")
             while (true) {
                 point = point.move(direction)
-                if(map.get(point) != '#') {
+                if (map.get(point) != '#') {
                     println("Step ${steps.size}")
                     steps += point
                 } else {
@@ -51,8 +56,8 @@ object Six {
         println("Walked ${steps.size}")
         val endT = Instant.now().toEpochMilli()
 
-        println("Run for: ${endT-startT}ms")
-        println("Expected run for part 2: ${(endT-startT)*130*130/1000}s")
+        println("Run for: ${endT - startT}ms")
+        println("Expected run for part 2: ${(endT - startT) * 130 * 130 / 1000 / 9 / 9}s")
     }
 
     private fun resolve2() {
@@ -69,11 +74,11 @@ object Six {
                 try {
                     while (true) {
                         point = point.move(direction)
-                        if(point == poi) println("on obstacle")
-                        if(map.get(point) != '#' && point != poi) {
-                            if(steps2.contains(point)){
+                        if (point == poi) println("on obstacle")
+                        if (map.get(point) != '#' && point != poi) {
+                            if (steps2.contains(point)) {
                                 val had = steps2[point]!!.add(direction)
-                                if(!had) {
+                                if (!had) {
                                     cycles++
                                     throw Exception("Found cycle")
                                 }
@@ -96,7 +101,58 @@ object Six {
         println("Found $cycles cycles")
         val endT = Instant.now().toEpochMilli()
 
-        println("Run for: ${endT-startT}ms")
+        println("Run for: ${endT - startT}ms")
+        println("Additional printlns are about 10% overhead")
+    }
+
+    private fun resolve2b() {
+        println("Part2b coroutines")
+        val startT = Instant.now().toEpochMilli()
+        val cycles = AtomicInteger(0)
+
+        runBlocking(Dispatchers.Default) {
+            for (x in map[0].indices) {
+                for (y in map.indices) {
+                    launch {
+                        var direction = Vector.UP
+                        val steps2 = hashMapOf<Point, MutableSet<Vector>>()
+                        val poi = Point(x, y)
+                        direction = Vector.UP
+                        var point = start
+
+                        try {
+                            while (true) {
+                                point = point.move(direction)
+//                                if (point == poi) println("on obstacle")
+                                if (map.get(point) != '#' && point != poi) {
+                                    if (steps2.contains(point)) {
+                                        val had = steps2[point]!!.add(direction)
+                                        if (!had) {
+                                            cycles.incrementAndGet()
+                                            throw Exception("Found cycle")
+                                        }
+                                    } else {
+                                        steps2[point] = mutableSetOf(direction)
+                                    }
+                                } else {
+                                    point = point.moveBack(direction)
+                                    direction = direction.rotate()
+//                            println("Going $direction")
+                                }
+                            }
+                        } catch (t: Throwable) {
+//                            println("done walking $poi")
+                        }
+                        steps2.clear()
+                    }
+                }
+            }
+        }
+
+        println("Found $cycles cycles")
+        val endT = Instant.now().toEpochMilli()
+
+        println("Run for: ${endT - startT}ms")
         println("Additional printlns are about 10% overhead")
     }
 
@@ -116,7 +172,7 @@ object Six {
             override fun rotate() = LEFT
 
         },
-        LEFT(-1,0 ) {
+        LEFT(-1, 0) {
             override fun rotate() = UP
 
         },
@@ -124,6 +180,7 @@ object Six {
             override fun rotate() = DOWN
 
         };
+
         abstract fun rotate(): Vector
 
     }
