@@ -1,8 +1,6 @@
 package twoFour
 
 import java.io.File
-import kotlin.concurrent.fixedRateTimer
-import kotlin.math.absoluteValue
 
 object Two {
 
