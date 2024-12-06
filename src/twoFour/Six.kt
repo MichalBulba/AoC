@@ -1,32 +1,35 @@
 package twoFour
 
 import java.io.File
+import java.lang.Exception
+import java.time.Instant
 
 object Six {
 
     private val map = mutableListOf<String>()
-    private var point = Point(0, 0)
+    private var start = Point(0, 0)
     private var direction = Vector.UP
     private val steps = mutableSetOf<Point>()
+    private val steps2 = hashMapOf<Point, MutableSet<Vector>>()
 
     private fun List<String>.get(x: Int, y: Int) = map[y].elementAt(x)
     private fun List<String>.get(point: Point) = map[point.y].elementAt(point.x)
 
     fun resolve() {
         resolve1()
-//        resolve2()
+        resolve2()
     }
 
     private fun resolve1() {
-
+        val startT = Instant.now().toEpochMilli()
         File("24/input_six.txt").forEachLine { line ->
             map += line
             val x = line.indexOf('^')
             if(x > 0) {
-                point = Point(x, map.size)
+                start = Point(x, map.size)
             }
         }
-
+        var point = start
         try {
             steps += point
             println("Going $direction")
@@ -46,13 +49,55 @@ object Six {
         }
 
         println("Walked ${steps.size}")
+        val endT = Instant.now().toEpochMilli()
+
+        println("Run for: ${endT-startT}ms")
+        println("Expected run for part 2: ${(endT-startT)*130*130/1000}s")
     }
 
     private fun resolve2() {
-        File("24/input_six.txt").forEachLine { line ->
+        println("Part2")
+        val startT = Instant.now().toEpochMilli()
+        var cycles = 0
 
+        for (x in map[0].indices) {
+            for (y in map.indices) {
+                val poi = Point(x, y)
+                direction = Vector.UP
+                var point = start
+
+                try {
+                    while (true) {
+                        point = point.move(direction)
+                        if(point == poi) println("on obstacle")
+                        if(map.get(point) != '#' && point != poi) {
+                            if(steps2.contains(point)){
+                                val had = steps2[point]!!.add(direction)
+                                if(!had) {
+                                    cycles++
+                                    throw Exception("Found cycle")
+                                }
+                            } else {
+                                steps2[point] = mutableSetOf(direction)
+                            }
+                        } else {
+                            point = point.moveBack(direction)
+                            direction = direction.rotate()
+//                            println("Going $direction")
+                        }
+                    }
+                } catch (t: Throwable) {
+                    println("done walking $poi")
+                }
+                steps2.clear()
+            }
         }
-        println("")
+
+        println("Found $cycles cycles")
+        val endT = Instant.now().toEpochMilli()
+
+        println("Run for: ${endT-startT}ms")
+        println("Additional printlns are about 10% overhead")
     }
 
     private data class Point(val x: Int, val y: Int) {
