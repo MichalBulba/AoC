@@ -37,6 +37,7 @@ object Main {
 //        twoFour.Three.resolve()
 //        twoFour.Four.resolve()
 //        twoFour.Five.resolve()
-        twoFour.Six.resolve()
+//        twoFour.Six.resolve()
+        twoFour.Seven.resolve()
     }
 }
