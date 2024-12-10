@@ -40,6 +40,7 @@ object Main {
 //        twoFour.Six.resolve()
 //        twoFour.Seven.resolve()
 //        twoFour.Eight.resolve()
-        twoFour.Nine.resolve()
+//        twoFour.Nine.resolve()
+        twoFour.Ten.resolve()
     }
 }
