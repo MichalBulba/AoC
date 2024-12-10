@@ -15,17 +15,17 @@ object Ten {
 
     /**
      * Single thread
-     * Run for: 46ms
+     * Run for: 15ms
      * Score: 719
      * Part2
      * Run for: 7ms
      * Score: 1530
      *
      * Dispatched
-     * Run for: 65ms
+     * Run for: 66ms
      * Score: 719
      * Part2
-     * Run for: 16ms
+     * Run for: 17ms
      * Score: 1530
      *
      * Lol, the dispatched version is slower than the single thread version
