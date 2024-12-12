@@ -42,7 +42,7 @@ object Main {
 //        twoFour.Eight.resolve()
 //        twoFour.Nine.resolve()
 //        twoFour.Ten.resolve()
-        twoFour.Eleven.resolve()
-//        twoFour.Twelwe.resolve()
+//        twoFour.Eleven.resolve()
+        twoFour.Twelve.resolve()
     }
 }
